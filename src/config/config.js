@@ -1,52 +1,72 @@
 // Configuration de l'interface médicale
 export const config = {
-  // Couleurs du thème
+  // Couleurs du thème - Palette moderne médicale
   colors: {
-    // Palette EMS / Ambulance Soins
-    primary: "#1E90FF", // Bleu ambulance (accent principal)
-    secondary: "#0B4F6C", // Bleu/teal sombre (bordures/contours)
-    accent: "#FF3B3B", // Rouge soin/urgence (accents, alertes)
-    muted: "#9AA9B2", // Texte secondaire
+    // Palette principale
+    primary: "#3B82F6", // Bleu moderne vif
+    secondary: "#1E293B", // Gris-bleu sombre
+    accent: "#EF4444", // Rouge moderne pour urgences
+    success: "#10B981", // Vert pour succès
+    warning: "#F59E0B", // Orange pour warnings
+    muted: "#94A3B8", // Gris clair pour textes secondaires
 
-    // Gravités des blessures (pour le moment, binaire: 0/1)
-    severity: {
-      // light: "#FFD166", // Légère - Jaune doux
-      // medium: "#F4A261", // Moyenne - Orange doux
-      // severe: "#E76F51", // Grave - Orange foncé
-      critical: "#D90429", // Présence de blessure
-    },
+    // Backgrounds
+    bgPrimary: "rgba(15, 23, 42, 0.95)", // Fond principal sombre
+    bgSecondary: "rgba(30, 41, 59, 0.8)", // Fond secondaire
+    bgTertiary: "rgba(51, 65, 85, 0.6)", // Fond tertiaire
+
+    // Bordures et séparateurs
+    border: "rgba(148, 163, 184, 0.2)",
+    borderLight: "rgba(148, 163, 184, 0.1)",
+
+    // État des blessures
+    injury: "#DC2626", // Rouge pour blessure présente
+    noInjury: "#64748B", // Gris pour pas de blessure
   },
 
   // Configuration du fond
   background: {
-    blur: true, // true = fond flou, false = fond transparent sans flou
-    opacity: 0.95, // Opacité de la fenêtre principale (0-1)
+    blur: true,
+    opacity: 0.98,
   },
 
   // Configuration de la fenêtre
   window: {
-    maxWidth: "1200px",
-    width: "90%",
-    padding: "40px",
-    borderRadius: "20px",
+    maxWidth: "1400px",
+    width: "92%",
+    padding: "2rem",
+    borderRadius: "1.25rem",
   },
 
-  // Mode showcase (pour le dev, mettre false en prod FiveM)
+  // Mode showcase
   showcase: true,
 
-  // Définition des catégories et actions disponibles
+  // Actions médicales
   actions: {
     soins: [
-      { id: "bandage", label: "Bandage" },
-      { id: "first_aid_kit", label: "Kit de soins" },
+      { id: "bandage", label: "Bandage", icon: "fa-solid fa-bandage" },
+      {
+        id: "first_aid_kit",
+        label: "Kit de premiers soins",
+        icon: "fa-solid fa-kit-medical",
+      },
+      { id: "morphine", label: "Morphine", icon: "fa-solid fa-pills" },
     ],
-    operations: [{ id: "suture", label: "Suture" }],
+    operations: [
+      { id: "suture", label: "Suture", icon: "fa-solid fa-scissors" },
+      { id: "surgery", label: "Chirurgie", icon: "fa-solid fa-user-doctor" },
+    ],
     transfusions: [
-      { id: "blood_bag", label: "Poche de sang" },
-      { id: "adrenaline", label: "Adrénaline" },
+      { id: "blood_bag", label: "Poche de sang", icon: "fa-solid fa-droplet" },
+      { id: "adrenaline", label: "Adrénaline", icon: "fa-solid fa-syringe" },
+      { id: "serum", label: "Sérum", icon: "fa-solid fa-flask" },
     ],
     autres: [
-      // Ajoutez ici d'autres actions spécifiques serveur
+      {
+        id: "defibrillator",
+        label: "Défibrillateur",
+        icon: "fa-solid fa-heart-pulse",
+      },
     ],
   },
 };
