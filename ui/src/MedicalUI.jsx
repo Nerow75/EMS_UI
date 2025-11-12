@@ -1,23 +1,29 @@
+// MedicalUI.jsx
+// Composant principal de l'interface médicale.
+// Gère l'affichage, les interactions et la synchronisation avec le client FiveM.
+
 import { useState, useEffect, useMemo } from "react";
 import { config } from "./config/config";
 import Header from "./components/Header";
 import HumanBody from "./components/HumanBody";
 import InjuryPanel from "./components/InjuryPanel";
 
+// Constantes de mise en page (unités relatives et espacement)
 const HEADER_HEIGHT = "3rem";
 const VERTICAL_SPACING = "1.5rem";
 const HORIZONTAL_SPACING = "1.5rem";
 
-// Dimensions "de référence" (avant scale)
-const BASE_WIDTH = 1120; // légèrement plus étroit
-const BASE_HEIGHT = 780; // un peu moins haut
+// Dimensions de référence pour le calcul du scale dynamique
+const BASE_WIDTH = 1120;
+const BASE_HEIGHT = 780;
 
 const MedicalUI = () => {
+  // États principaux de l'interface
   const [selectedPart, setSelectedPart] = useState(null);
   const [isVisible, setIsVisible] = useState(config.showcase);
   const [gender, setGender] = useState("male");
 
-  // Exemples de blessures (démo)
+  // État temporaire de démonstration (données simulées)
   const [bodyParts, setBodyParts] = useState({
     fullBody: {
       name: "Corps Entier",
@@ -102,24 +108,22 @@ const MedicalUI = () => {
     },
   });
 
-  // Layout responsive (colonne si étroit)
+  // États d’adaptation à la taille de la fenêtre
   const [stacked, setStacked] = useState(false);
-
-  // Auto-scale de la fenêtre (texte + UI) selon viewport
   const [scale, setScale] = useState(1);
 
+  // Ajustement du layout et du scale selon la taille du viewport
   useEffect(() => {
     const computeLayout = () => {
-      const vw = window.innerWidth - 32; // - padding extérieur
+      const vw = window.innerWidth - 32;
       const vh = window.innerHeight - 32;
 
-      // scale pour faire rentrer la fenêtre de base
       const sW = vw / BASE_WIDTH;
       const sH = vh / BASE_HEIGHT;
-      const s = Math.max(0.72, Math.min(1, Math.min(sW, sH))); // clamp 0.72 → 1
+      const s = Math.max(0.72, Math.min(1, Math.min(sW, sH)));
 
       setScale(s);
-      setStacked(vw < 1100 * s); // bascule en colonne si vraiment étroit
+      setStacked(vw < 1100 * s);
     };
 
     computeLayout();
@@ -127,10 +131,12 @@ const MedicalUI = () => {
     return () => window.removeEventListener("resize", computeLayout);
   }, []);
 
+  // Gestion des messages NUI (open, close, update)
   useEffect(() => {
     const handleMessage = (event) => {
       if (!event || !event.data) return;
       const data = event.data;
+
       switch (data.action) {
         case "openUI":
           setIsVisible(true);
@@ -150,8 +156,9 @@ const MedicalUI = () => {
           break;
       }
     };
-    window.addEventListener("message", handleMessage);
 
+    // Écouteurs de messages et de raccourcis clavier
+    window.addEventListener("message", handleMessage);
     const handleKeyDown = (event) => {
       if (event.key === "Escape" && isVisible) closeUI();
     };
@@ -163,10 +170,12 @@ const MedicalUI = () => {
     };
   }, [isVisible]);
 
+  // Fermeture de l'interface et notification au client Lua
   const closeUI = () => {
     setIsVisible(false);
     setSelectedPart(null);
     setGender("male");
+
     fetch(`https://medical-ui/closeUI`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -176,14 +185,16 @@ const MedicalUI = () => {
     });
   };
 
+  // Masque complet lorsque l'interface n'est pas visible
   if (!isVisible) return null;
 
+  // Styles du conteneur principal
   const containerStyle = useMemo(
     () => ({
       display: "flex",
       gap: stacked ? "1rem" : HORIZONTAL_SPACING,
-      width: `${BASE_WIDTH}px`, // taille de base
-      height: `${BASE_HEIGHT}px`, // taille de base
+      width: `${BASE_WIDTH}px`,
+      height: `${BASE_HEIGHT}px`,
       background: config.colors.bgPrimary,
       borderRadius: "1.25rem",
       padding: 0,
@@ -198,14 +209,13 @@ const MedicalUI = () => {
       position: "relative",
       overflow: "hidden",
       flexDirection: stacked ? "column" : "row",
-
-      // Auto-scale
       transform: `scale(${scale})`,
       transformOrigin: "center center",
     }),
     [stacked, scale]
   );
 
+  // Styles du contenu interne
   const contentStyle = useMemo(
     () => ({
       display: "flex",
@@ -224,6 +234,7 @@ const MedicalUI = () => {
     [stacked]
   );
 
+  // Rendu de l'interface complète
   return (
     <div
       role="dialog"
@@ -244,7 +255,6 @@ const MedicalUI = () => {
     >
       <div style={containerStyle}>
         <Header onClose={closeUI} />
-
         <div style={contentStyle}>
           <HumanBody
             selectedPart={selectedPart}

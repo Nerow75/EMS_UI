@@ -1,9 +1,16 @@
+/* index.css */
+/* Feuille de style principale de l'interface médicale. 
+   Définit la mise à zéro du style par défaut et les comportements globaux. */
+
+@import "tailwindcss";
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+/* Corps du document : configuration de la police et fond transparent */
 body {
   margin: 0;
   font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
@@ -12,28 +19,27 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow: hidden;
-
-  /* Fond transparent pour FiveM */
-  background: transparent;
+  background: transparent; /* Fond transparent compatible FiveM */
 }
 
-/* Focus clair et accessible */
+/* Style d'accessibilité pour les éléments en focus */
 :focus-visible {
   outline: 2px solid #3b82f6;
   outline-offset: 2px;
 }
 
-/* Réduction des animations si demandé */
+/* Suppression des animations pour les utilisateurs préférant un rendu statique */
 .reduced-motion * {
   animation: none !important;
   transition: none !important;
 }
 
-/* Pour le showcase uniquement - simulation du jeu en arrière-plan */
+/* Mode démonstration (showcase) : fond dégradé simulant l’environnement du jeu */
 body.showcase {
   background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
 }
 
+/* Effet décoratif de fond pour le mode showcase */
 body.showcase::before {
   content: "";
   position: fixed;
@@ -55,11 +61,13 @@ body.showcase::before {
   z-index: -1;
 }
 
+/* Zone racine React occupant tout l’écran */
 #root {
   width: 100%;
   height: 100vh;
 }
 
+/* Police utilisée pour le code dans les éléments <code> */
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;

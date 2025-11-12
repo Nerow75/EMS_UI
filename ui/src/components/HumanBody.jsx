@@ -1,10 +1,16 @@
+// HumanBody.jsx
+// Composant responsable de l’affichage interactif du corps humain et de la visualisation des blessures.
+// S’appuie sur la librairie `reactjs-human-body` pour la représentation SVG du modèle humain.
+
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { BodyComponent } from "reactjs-human-body";
 import { config } from "../config/config";
 
+// Couleurs de base et de sélection pour les segments corporels
 const BASE_BODY_COLOR = "#64748B";
 const SELECTED_STROKE_COLOR = "#FFFFFF";
 
+// Association entre les identifiants du modèle SVG et les clés internes de l’application
 const PART_MAPPING = {
   head: "head",
   chest: "torso",
@@ -21,15 +27,20 @@ const PART_MAPPING = {
   rightFoot: "rightLeg",
 };
 
+// Liste des parties à masquer (permet une configuration dynamique)
 const HIDDEN_PARTS = new Set([]);
 
+// Composant principal
 const HumanBody = ({ selectedPart, onPartSelect, bodyParts, gender }) => {
+  // Suivi de la partie survolée
   const [hoveredPart, setHoveredPart] = useState(null);
 
+  // Détermination de la couleur d’une partie selon la présence de blessures
   const getPartColor = useCallback(
     (partKey) => {
       let injuries = [];
       if (partKey === "torso") {
+        // Fusion des blessures du torse et de l’abdomen
         const chestInj = bodyParts.chest?.injuries || [];
         const abdomenInj = bodyParts.abdomen?.injuries || [];
         injuries = [...chestInj, ...abdomenInj];
@@ -43,6 +54,7 @@ const HumanBody = ({ selectedPart, onPartSelect, bodyParts, gender }) => {
     [bodyParts]
   );
 
+  // Génération de la configuration d’affichage du corps selon l’état des blessures
   const bodyConfiguration = useMemo(() => {
     const parts = {};
     Object.keys(PART_MAPPING).forEach((reactjsPart) => {
@@ -54,6 +66,7 @@ const HumanBody = ({ selectedPart, onPartSelect, bodyParts, gender }) => {
       };
     });
 
+    // Création du mapping de rendu par partie visible/masquée/sélectionnée
     const configuration = {};
     Object.keys(parts).forEach((bodyPartName) => {
       configuration[bodyPartName] = {
@@ -67,6 +80,7 @@ const HumanBody = ({ selectedPart, onPartSelect, bodyParts, gender }) => {
     return { parts, configuration };
   }, [selectedPart, getPartColor]);
 
+  // Application dynamique des couleurs et effets visuels sur le SVG
   useEffect(() => {
     Object.entries(bodyConfiguration.parts).forEach(
       ([bodyPartName, partData]) => {
@@ -81,6 +95,7 @@ const HumanBody = ({ selectedPart, onPartSelect, bodyParts, gender }) => {
           ? PART_MAPPING[bodyPartName] === selectedPart
           : false;
 
+        // Mise à jour des propriétés graphiques du SVG
         paths.forEach((path) => {
           path.style.fill = fillColor;
           path.style.filter =
@@ -94,6 +109,7 @@ const HumanBody = ({ selectedPart, onPartSelect, bodyParts, gender }) => {
     );
   }, [bodyConfiguration, gender, selectedPart]);
 
+  // Sélection d’une partie du corps via clic
   const handleClick = useCallback(
     (partId) => {
       const mappedPart = PART_MAPPING[partId];
@@ -102,6 +118,7 @@ const HumanBody = ({ selectedPart, onPartSelect, bodyParts, gender }) => {
     [onPartSelect]
   );
 
+  // Gestion du survol de la souris pour afficher le badge d’information
   const handleMouseMove = useCallback((event) => {
     if (!(event.target instanceof Element)) return setHoveredPart(null);
     const svgElement = event.target.closest("[data-position]");
@@ -112,22 +129,27 @@ const HumanBody = ({ selectedPart, onPartSelect, bodyParts, gender }) => {
     setHoveredPart(mappedPart || null);
   }, []);
 
+  // Réinitialisation du survol
   const handleMouseLeave = useCallback(() => setHoveredPart(null), []);
 
+  // Clé de rendu unique pour déclencher le recalcul du composant SVG
   const bodyKey = useMemo(
     () =>
       JSON.stringify({ gender, selectedPart, state: bodyConfiguration.parts }),
     [bodyConfiguration.parts, gender, selectedPart]
   );
 
+  // Détermination du modèle à utiliser (homme ou femme)
   const resolvedGender = gender === "female" ? "female" : "male";
+
+  // Vérifie la présence de blessures sur le corps entier
   const hasFullBodyInjuries =
     bodyParts.fullBody && bodyParts.fullBody.injuries.length > 0;
 
+  // Rendu du composant principal
   return (
     <div
       style={{
-        // largeur modérée (même design)
         flex: "0 1 350px",
         maxWidth: "350px",
         width: "100%",
@@ -141,7 +163,7 @@ const HumanBody = ({ selectedPart, onPartSelect, bodyParts, gender }) => {
         minHeight: 0,
       }}
     >
-      {/* Zone corps : prend tout l'espace restant → pieds jamais coupés */}
+      {/* Zone centrale d’affichage du modèle du corps humain */}
       <div
         style={{
           position: "relative",
@@ -167,7 +189,7 @@ const HumanBody = ({ selectedPart, onPartSelect, bodyParts, gender }) => {
           style={{ width: "100%", height: "100%", objectFit: "contain" }}
         />
 
-        {/* Badge hover — bas-centre, juste au-dessus de la légende */}
+        {/* Infobulle contextuelle affichée au survol d’une partie */}
         {hoveredPart &&
           (() => {
             let name = "";
@@ -213,7 +235,7 @@ const HumanBody = ({ selectedPart, onPartSelect, bodyParts, gender }) => {
           })()}
       </div>
 
-      {/* Légende */}
+      {/* Légende des états de blessure */}
       <div
         style={{
           minHeight: "2.25rem",
@@ -265,7 +287,7 @@ const HumanBody = ({ selectedPart, onPartSelect, bodyParts, gender }) => {
         </div>
       </div>
 
-      {/* Bouton Corps Entier */}
+      {/* Bouton permettant la sélection du corps entier */}
       {hasFullBodyInjuries && (
         <button
           onClick={() => onPartSelect("fullBody")}

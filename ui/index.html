@@ -1,24 +1,43 @@
+<!-- index.html -->
+<!-- Point d’entrée principal de l’application React utilisée pour l’interface médicale FiveM. -->
+
 <!doctype html>
 <html lang="fr">
 
 <head>
+  <!-- Définition du jeu de caractères et métadonnées -->
   <meta charset="UTF-8" />
   <link rel="icon" type="image/svg+xml" href="/vite.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Description SEO et couleur du thème du navigateur -->
   <meta name="description" content="Interface médicale FiveM : examen du corps, blessures, actions de soins." />
   <meta name="theme-color" content="#0f172a" />
+
+  <!-- Préconnexion aux serveurs Google Fonts pour amélioration des performances -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- Chargement de la police Poppins -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Importation des icônes Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
     crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- Titres de la page (second titre prioritaire) -->
   <title>medical-fivem-ui-vite</title>
   <title>Examen médical — UI FiveM</title>
 </head>
 
 <body>
+  <!-- Point d’ancrage React -->
   <div id="root"></div>
+
+  <!-- Message de secours si JavaScript est désactivé -->
   <noscript>Cette interface nécessite JavaScript.</noscript>
+
+  <!-- Chargement du script principal de l’application -->
   <script type="module" src="/src/main.jsx"></script>
 </body>
 

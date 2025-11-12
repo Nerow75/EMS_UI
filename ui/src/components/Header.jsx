@@ -1,5 +1,11 @@
+// Header.jsx
+// Composant d’en-tête de l’interface médicale.
+// Affiche le titre, les boutons de contrôle de fenêtre (réduire, agrandir, fermer)
+// et applique un effet de flou avec style translucide cohérent avec le thème visuel.
+
 import { config } from "../config/config";
 
+// Composant principal du bandeau supérieur de l'UI
 const Header = ({ onClose }) => {
   return (
     <div
@@ -20,7 +26,7 @@ const Header = ({ onClose }) => {
         backdropFilter: "blur(15px)",
       }}
     >
-      {/* Titre centré */}
+      {/* Zone centrale contenant le titre et l’icône principale */}
       <div
         style={{
           display: "flex",
@@ -49,7 +55,7 @@ const Header = ({ onClose }) => {
         </h1>
       </div>
 
-      {/* Boutons de fenêtre à droite */}
+      {/* Groupe de boutons positionné à droite (contrôles de la fenêtre) */}
       <div
         style={{
           position: "absolute",
@@ -58,7 +64,7 @@ const Header = ({ onClose }) => {
           gap: "0.375rem",
         }}
       >
-        {/* Bouton réduire */}
+        {/* Bouton réduire la fenêtre */}
         <button
           type="button"
           aria-label="Réduire la fenêtre"
@@ -87,7 +93,7 @@ const Header = ({ onClose }) => {
           <i className="fa-solid fa-minus" style={{ fontSize: "0.75rem" }}></i>
         </button>
 
-        {/* Bouton agrandir */}
+        {/* Bouton agrandir la fenêtre */}
         <button
           type="button"
           aria-label="Agrandir la fenêtre"
@@ -119,7 +125,7 @@ const Header = ({ onClose }) => {
           ></i>
         </button>
 
-        {/* Bouton fermer */}
+        {/* Bouton de fermeture de l’interface */}
         <button
           type="button"
           aria-label="Fermer l’interface"

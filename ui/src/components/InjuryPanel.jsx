@@ -1,10 +1,17 @@
+// InjuryPanel.jsx
+// Composant gérant l’affichage des blessures d’une partie du corps sélectionnée
+// et les actions médicales disponibles. Sert d’interface principale entre l’utilisateur
+// et les traitements NUI envoyés au script côté client.
+
 import { useMemo, useState } from "react";
 import { config } from "../config/config";
 
 const InjuryPanel = ({ selectedPart, bodyParts }) => {
+  // Gestion de l’état de la blessure sélectionnée et de l’onglet actif
   const [selectedInjuryIndex, setSelectedInjuryIndex] = useState(null);
   const [activeTab, setActiveTab] = useState("soins");
 
+  // Fonction d’envoi d’une action de soin au client via NUI
   const handleAction = async (action, index) => {
     try {
       await fetch(`https://medical-ui/treat`, {
@@ -17,10 +24,12 @@ const InjuryPanel = ({ selectedPart, bodyParts }) => {
         }),
       });
     } catch (error) {
+      // Mode développement : affichage en console si le NUI n’est pas accessible
       console.log("Dev mode: treat callback", action, selectedPart, index);
     }
   };
 
+  // Filtrage des actions disponibles selon l’onglet sélectionné
   const availableActions = useMemo(() => {
     switch (activeTab) {
       case "soins":
@@ -36,6 +45,7 @@ const InjuryPanel = ({ selectedPart, bodyParts }) => {
     }
   }, [activeTab]);
 
+  // État par défaut : aucune partie du corps sélectionnée
   if (!selectedPart) {
     return (
       <div
@@ -45,7 +55,7 @@ const InjuryPanel = ({ selectedPart, bodyParts }) => {
           borderRadius: "1rem",
           padding: "clamp(1.5rem, 3vw, 2rem)",
           border: `1px solid ${config.colors.border}`,
-          height: "100%", // ← prend toute la hauteur
+          height: "100%",
           minHeight: 0,
           overflow: "auto",
           display: "flex",
@@ -90,6 +100,7 @@ const InjuryPanel = ({ selectedPart, bodyParts }) => {
     );
   }
 
+  // Fusion des blessures si le tronc est sélectionné
   let part = bodyParts[selectedPart];
   if (selectedPart === "torso") {
     const chest = bodyParts.chest || { name: "Torse", injuries: [] };
@@ -99,15 +110,19 @@ const InjuryPanel = ({ selectedPart, bodyParts }) => {
       injuries: [...(chest.injuries || []), ...(abdomen.injuries || [])],
     };
   }
+
+  // Gestion du cas "Corps entier"
   if (selectedPart === "fullBody") {
     part = bodyParts.fullBody || { name: "Corps Entier", injuries: [] };
   }
 
+  // États dérivés
   const hasInjuries = (part.injuries || []).length > 0;
   const nothingSelected = selectedInjuryIndex === null;
   const selectedInjury =
     selectedInjuryIndex !== null ? part.injuries[selectedInjuryIndex] : null;
 
+  // Structure du panneau principal
   return (
     <div
       style={{
@@ -116,15 +131,15 @@ const InjuryPanel = ({ selectedPart, bodyParts }) => {
         borderRadius: "1rem",
         padding: "clamp(1rem, 2.5vw, 1.5rem)",
         border: `1px solid ${config.colors.border}`,
-        height: "100%", // ← prend toute la hauteur dispo
-        minHeight: 0, // ← nécessaire pour que le scroll fonctionne correctement en flex
-        overflow: "hidden", // ← on contrôle le scroll dans le contenu
+        height: "100%",
+        minHeight: 0,
+        overflow: "hidden",
         boxShadow: "0 8px 24px rgba(0,0,0,0.2)",
         display: "flex",
         flexDirection: "column",
       }}
     >
-      {/* En-tête */}
+      {/* En-tête du panneau : nom de la partie et compteur de blessures */}
       <div
         style={{
           display: "flex",
@@ -172,7 +187,7 @@ const InjuryPanel = ({ selectedPart, bodyParts }) => {
         )}
       </div>
 
-      {/* Contenu scrollable pleine hauteur */}
+      {/* Contenu principal : liste des blessures, onglets et actions */}
       <div
         style={{
           flex: "1 1 auto",
@@ -185,7 +200,7 @@ const InjuryPanel = ({ selectedPart, bodyParts }) => {
       >
         {hasInjuries ? (
           <>
-            {/* Liste blessures */}
+            {/* Liste des blessures de la partie sélectionnée */}
             <div
               style={{
                 display: "flex",
@@ -259,7 +274,7 @@ const InjuryPanel = ({ selectedPart, bodyParts }) => {
               ))}
             </div>
 
-            {/* Blessure sélectionnée */}
+            {/* Zone d’informations sur la blessure sélectionnée */}
             {selectedInjury && (
               <div
                 style={{
@@ -302,7 +317,7 @@ const InjuryPanel = ({ selectedPart, bodyParts }) => {
               </div>
             )}
 
-            {/* Tabs & Actions */}
+            {/* Navigation par onglets et liste d’actions médicales */}
             <div
               style={{
                 display: "flex",
@@ -365,6 +380,7 @@ const InjuryPanel = ({ selectedPart, bodyParts }) => {
               })}
             </div>
 
+            {/* Actions dynamiques disponibles selon l’onglet */}
             <div
               style={{
                 display: "grid",
@@ -429,6 +445,7 @@ const InjuryPanel = ({ selectedPart, bodyParts }) => {
             </div>
           </>
         ) : (
+          // État affiché si aucune blessure détectée
           <div
             style={{
               flex: 1,
