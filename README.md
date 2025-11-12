@@ -8,9 +8,11 @@ Permet l’inspection du corps humain, la visualisation des blessures et l’app
 ## Aperçu visuel
 
 <!-- Ajouter ici un aperçu général de l'interface (interface complète ouverte dans le jeu) -->
+
 ![Interface médicale principale](./screens/medical_ui_main.jpg)
 
 <!-- Ajouter ici un second screen montrant le panel des blessures -->
+
 ![Panneau de blessures et actions](./screens/medical_ui_injuries.jpg)
 
 ---
@@ -44,7 +46,7 @@ EMS_UI/
 ├── fxmanifest.lua         # Déclaration principale du script FiveM
 └── README.md              # Documentation du projet
 
-````
+```
 
 ---
 
@@ -52,36 +54,36 @@ EMS_UI/
 
 1. Cloner le dépôt dans le dossier `resources` de ton serveur FiveM :
 
-   ```bash
-   cd resources
-   git clone https://github.com/<ton-utilisateur>/EMS_UI.git ems-ui
-````
+```bash
+cd resources
+git clone https://github.com/<ton-utilisateur>/EMS_UI.git ems-ui
+```
 
 2. Se placer dans le dossier `ui` et installer les dépendances :
 
-   ```bash
-   cd ems-ui/ui
-   npm install
-   ```
+```bash
+cd ems-ui/ui
+npm install
+```
 
 3. Construire le build de production :
 
-   ```bash
-   npm run build
-   ```
+```bash
+npm run build
+```
 
 4. Vérifier que le dossier `ui/dist` contient les fichiers générés :
 
-   ```
-   ui/dist/index.html
-   ui/dist/assets/*
-   ```
+```
+ui/dist/index.html
+ui/dist/assets/*
+```
 
 5. Ajouter la ressource dans `server.cfg` :
 
-   ```
-   ensure ems-ui
-   ```
+```
+ensure ems-ui
+```
 
 ---
 
@@ -91,9 +93,9 @@ Les paramètres visuels sont définis dans `ui/src/config/config.js`.
 
 Exemples de configuration personnalisable :
 
-* Couleurs principales du thème (`primary`, `accent`, `bgPrimary`, etc.)
-* Mode démonstration (`showcase: true` pour tester sans backend)
-* Catégories et icônes d’actions médicales
+- Couleurs principales du thème (`primary`, `accent`, `bgPrimary`, etc.)
+- Mode démonstration (`showcase: true` pour tester sans backend)
+- Catégories et icônes d’actions médicales
 
 ---
 
@@ -112,39 +114,28 @@ Accès local : [http://localhost:5173](http://localhost:5173)
 
 ## Intégration FiveM
 
-* Le `fxmanifest.lua` charge automatiquement la page `ui/dist/index.html` comme interface NUI.
-* Les actions (postes de soin, traitements) peuvent être reliées à des événements client via :
+- Le `fxmanifest.lua` charge automatiquement la page `ui/dist/index.html` comme interface NUI.
+- Les actions (postes de soin, traitements) peuvent être reliées à des événements client via :
 
-  ```lua
-  SendNUIMessage({ type = "openMedicalUI", data = {...} })
-  ```
-* Fermeture de l’UI :
+```lua
+SendNUIMessage({ type = "openMedicalUI", data = {...} })
+```
 
-  ```lua
-  SendNUIMessage({ type = "closeMedicalUI" })
-  SetNuiFocus(false, false)
-  ```
+- Fermeture de l’UI :
+
+```lua
+SendNUIMessage({ type = "closeMedicalUI" })
+SetNuiFocus(false, false)
+```
 
 ---
 
 ## Crédits
 
-Développement : **Antoine (Nerow)**
+Développement : **NRW**
 Framework : **React + Vite + TailwindCSS**
 Intégration : **FiveM (Lua + NUI)**
-Projet destiné exclusivement à **San Andreas RP**
-
----
-
-## Screenshots recommandés
-
-Créer un dossier `/screens` à la racine du projet et y placer :
-
-| Nom du fichier            | Description                   | Recommandation                                  |
-| ------------------------- | ----------------------------- | ----------------------------------------------- |
-| `medical_ui_main.jpg`     | Interface principale ouverte  | Vue en jeu (zoom sur le corps complet)          |
-| `medical_ui_injuries.jpg` | Panneau latéral des blessures | Vue sur les détails d’une blessure sélectionnée |
-| `medical_ui_actions.jpg`  | Liste des actions médicales   | Vue sur la section inférieure du panneau        |
+Projet destiné exclusivement à **Sun Andreas RP**
 
 ---
 
