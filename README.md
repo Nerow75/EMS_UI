@@ -1,6 +1,6 @@
 # Medical UI – Interface EMS pour FiveM
 
-Interface médicale moderne développée pour les services EMS de San Andreas.  
+Interface médicale moderne développée pour les services EMS de Sun Andreas.  
 Permet l’inspection du corps humain, la visualisation des blessures et l’application d’actions médicales via une interface NUI ergonomique et réactive.
 
 ---
