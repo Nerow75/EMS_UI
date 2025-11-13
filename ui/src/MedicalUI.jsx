@@ -4,6 +4,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { config } from "./config/config";
+import { resolveBoneName } from "./config/boneMap";
 import Header from "./components/Header";
 import HumanBody from "./components/HumanBody";
 import InjuryPanel from "./components/InjuryPanel";
@@ -152,6 +153,76 @@ const MedicalUI = () => {
           if (data.injuries && typeof data.injuries === "object")
             setBodyParts(data.injuries);
           break;
+        case "addInjury": {
+          // Côté LUA tu envoies : boneName = "Tête" par ex.
+          const { boneName, type, severity, description } = data;
+          if (!boneName || !type) return;
+
+          const { key, cleanLabel } = resolveBoneName(boneName);
+
+          setBodyParts((prev) => {
+            const next = { ...prev };
+            const current = next[key] || {
+              name: next[key]?.name || key,
+              injuries: [],
+            };
+
+            // Tu peux inclure le nom précis de l'os dans le type ou dans la description
+            const label = type; // ex: "Impact", "Plaie", etc.
+
+            current.injuries = [
+              ...(current.injuries || []),
+              {
+                type: label,
+                severity: severity || "Inconnue",
+                // On ajoute le nom précis en plus dans la description
+                description: description
+                  ? `${description} (${cleanLabel})`
+                  : `Blessure localisée : ${cleanLabel}`,
+              },
+            ];
+
+            next[key] = current;
+            return next;
+          });
+          break;
+        }
+        case "batchInjuries": {
+          const { list } = data; // [{ boneName, type, severity, description }, ...]
+          if (!Array.isArray(list)) return;
+
+          setBodyParts((prev) => {
+            const next = { ...prev };
+
+            list.forEach((item) => {
+              if (!item) return;
+              const { boneName, type, severity, description } = item;
+              if (!boneName || !type) return;
+
+              const { key, cleanLabel } = resolveBoneName(boneName);
+              const current = next[key] || {
+                name: next[key]?.name || key,
+                injuries: [],
+              };
+
+              current.injuries = [
+                ...(current.injuries || []),
+                {
+                  type,
+                  severity: severity || "Inconnue",
+                  description: description
+                    ? `${description} (${cleanLabel})`
+                    : `Blessure localisée : ${cleanLabel}`,
+                },
+              ];
+
+              next[key] = current;
+            });
+
+            return next;
+          });
+          break;
+        }
         default:
           break;
       }
